@@ -1,0 +1,58 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Timer } from "lucide-react";
+
+export default function TrainingsApp() {
+  const [exercises, setExercises] = useState([]);
+  const [exercise, setExercise] = useState("");
+  const [weight, setWeight] = useState("");
+  const [reps, setReps] = useState("");
+  const [rir, setRir] = useState("");
+  const [timer, setTimer] = useState(null);
+
+  const addExercise = () => {
+    if (exercise && weight && reps) {
+      const newExercise = { exercise, weight, reps, rir };
+      setExercises([...exercises, newExercise]);
+      setExercise("");
+      setWeight("");
+      setReps("");
+      setRir("");
+    }
+  };
+
+  return (
+    <div className="p-4 space-y-4">
+      <h1 className="text-xl font-bold">Trainings-Tracker</h1>
+      <Card>
+        <CardContent className="space-y-2">
+          <Label>Übung</Label>
+          <Input value={exercise} onChange={(e) => setExercise(e.target.value)} placeholder="z.B. Bankdrücken" />
+          <Label>Gewicht (kg)</Label>
+          <Input type="number" value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="z.B. 80" />
+          <Label>Wiederholungen</Label>
+          <Input type="number" value={reps} onChange={(e) => setReps(e.target.value)} placeholder="z.B. 10" />
+          <Label>Reps in Reserve (RIR)</Label>
+          <Input type="number" value={rir} onChange={(e) => setRir(e.target.value)} placeholder="z.B. 2" />
+          <Button onClick={addExercise} className="w-full">Hinzufügen</Button>
+        </CardContent>
+      </Card>
+      
+      <h2 className="text-lg font-bold">Übungen</h2>
+      {exercises.map((ex, index) => (
+        <Card key={index} className="p-2">
+          <CardContent>
+            <p><strong>{ex.exercise}</strong> - {ex.weight} kg x {ex.reps} (RIR: {ex.rir})</p>
+          </CardContent>
+        </Card>
+      ))}
+
+      <Button onClick={() => setTimer(60)}><Timer className="mr-2" /> 60s Pause</Button>
+      {timer && <p className="text-red-500 font-bold">Timer läuft: {timer}s</p>}
+    </div>
+  );
+}
+
